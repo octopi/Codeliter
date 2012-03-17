@@ -1,12 +1,21 @@
+
 // generate (universally) unique class name for each script load
 var CLASS_NAME = 'me-davidhu-selection'+(Math.floor(Math.random()*1000));
+
+// for bracket matching, keep track of one stack per code block on page
 var bracketStack = [];
-var numBStack = []; 
-var bid = 0;
+// but have a globally unique bracket pair counter
+var bid = 0; 
 
-// GitHub code is surrounded by <div class="highlight"></div>
-var codeBlocks = document.getElementsByClassName('highlight');
+// get all blocks of code on the page
+var codeBlocks;
+if(window.location.hostname.indexOf('github.com') > -1) {
+	codeBlocks = document.getElementsByClassName('highlight');	
+} else if(window.location.hostname.indexOf('stackoverflow.com') > -1) {
+	codeBlocks = document.getElementsByClassName('prettyprint');	
+}
 
+// initialize all code blocks independently
 for(var i = 0; i < codeBlocks.length; i++) {
 	var block = codeBlocks[i];
 
@@ -27,18 +36,21 @@ for(var i = 0; i < codeBlocks.length; i++) {
 			// get the selection and highlight
 			var selection = window.getSelection().toString();
 			if(selection.length > 0 && selection.search(/^\s+$/) === -1) {
-				if(selection.search(/^\{$/) >= 0 || selection.search(/^\}$/) >= 0) {
-					//bracketStack = 0;
-					//bracketMatch(selection.anchorNode, selection, theBlock);
-				} else {
+				if(!(selection.search(/^\{$/) >= 0 || selection.search(/^\}$/) >= 0)) {
 					highlight(selection, theBlock);	
 				}
 			}
-		}
+		};
 	}(block);
 }
 
-// finish setting up brackets
+// finish setting up brackets: bind all pairs together
+for(var k = 0; k < bid; k++) {
+	var brackets = document.getElementsByClassName(CLASS_NAME+'-bracket-'+k);
+	
+	brackets[0].onclick = bracketClick(brackets[0], brackets[1]);
+	brackets[1].onclick = bracketClick(brackets[0], brackets[1]);
+}
 
 // finds all instances of selection in element and highlights them
 function highlight(selection, element) {
@@ -47,8 +59,7 @@ function highlight(selection, element) {
 		var parent = element.parentNode; // since element is just the textNode
 
 		// so we avoid duplication during tree traversal
-		if(parent.className.indexOf(CLASS_NAME) >= 0 
-			|| parent.innerHTML.indexOf(CLASS_NAME) >= 0 )
+		if(parent.className.indexOf(CLASS_NAME) >= 0 || parent.innerHTML.indexOf(CLASS_NAME) >= 0 )
 			return;
 
 		console.log("replacing: "+parent.innerHTML);
@@ -63,28 +74,32 @@ function highlight(selection, element) {
 	}
 }
 
+// sets up brackets
 function bracketInit(blockIndex, element) {
 	var text = element.nodeValue; // the actual text, not innerHTML
-	// if there's no bracket, who cares
-	console.log("examining element: ");
-	console.log(element);
+	
 	if(text !== null && typeof text === 'string' 
 		&& (text.indexOf('}') >= 0 || text.indexOf('{') >= 0)) {
 		var parent = element.parentNode; // since element is just the textNode
-		parent.innerHTML = parent.innerHTML.replace('{', '<span class="'+CLASS_NAME+'-bracket" style="color:#f00;">{</span>');
-		parent.innerHTML = parent.innerHTML.replace('}', '<span class="'+CLASS_NAME+'-bracket" style="color:#f00;">}</span>');
+
+		// so we avoid duplication during tree traversal
+		if(parent.className.indexOf(CLASS_NAME) >= 0 || parent.innerHTML.indexOf(CLASS_NAME) >= 0 )
+			return;
+
+		parent.innerHTML = parent.innerHTML.replace('{', '<span class="'+CLASS_NAME+'-bracket">{</span>');
+		parent.innerHTML = parent.innerHTML.replace('}', '<span class="'+CLASS_NAME+'-bracket">}</span>');
 
 		var brackets = document.getElementsByClassName(CLASS_NAME+'-bracket');
 		for(var i = 0; i < brackets.length; i++) {
 			var currBracket = brackets[i];
 			if(currBracket.textContent.indexOf('{') >= 0) {
-				//currBracket.textContent = 'open';
 				bracketStack[blockIndex].push(currBracket);
 			} else if(currBracket.textContent.indexOf('}') >= 0) {
 				var matchedBracket = bracketStack[blockIndex].pop();
-				//matchedBracket.className = matchedBracket.className+' '+CLASS_NAME+'-bracket-';
-				matchedBracket.textContent = bid;
-				currBracket.textContent = bid;
+
+				matchedBracket.className = CLASS_NAME+'-bracket-'+bid;
+				currBracket.className = CLASS_NAME+'-bracket-'+bid;
+
 				bid++;
 			}
 		}
@@ -98,22 +113,16 @@ function bracketInit(blockIndex, element) {
 	}
 }
 
-
-function bracketMatch(bracketNode, bracket, element) {
-	var text = element.nodeValue; // the actual text, not innerHTML
-	// if there's no bracket, who cares
-	if(text !== null && typeof text === 'string' && (text.indexOf('}') >= 0 || text.indexOf('{') >= 0)) {
-		var parent = element.parentNode; // since element is just the textNode
-
-		var content = parent.textContent;
-		for(var i = 0; i < content.length; i++) {
-
+// highlight open & close bracket pair 
+function bracketClick(openBracket, closeBracket) {
+	return function(event) {
+		var selection = window.getSelection().toString();
+		if(selection.length > 0 && selection.search(/^\s+$/) === -1) {
+			openBracket.setAttribute('style', 'border:1px solid #999; border-radius:3px;');
+			openBracket.className += (' '+CLASS_NAME);
+			closeBracket.setAttribute('style', 'border:1px solid #999; border-radius:3px;');
+			closeBracket.className += ' '+CLASS_NAME;
 		}
-	}
-
-	// recurse through DOM children
-	var children = element.childNodes;
-	for(var i = 0; i < children.length; i++) {
-		bracketMatch(bracketNode, bracket, children[i]);
-	}
+		event.stopPropagation();
+	};
 }
