@@ -78,7 +78,7 @@ function highlight(selection, element) {
 
 		console.log("replacing: "+parent.innerHTML);
 		parent.innerHTML = parent.innerHTML.replace(selection, 
-			'<span style="border:1px solid #999; border-radius:3px;" class="'+CLASS_NAME+'">'+selection+'</span>');
+			'<span style="border:1px solid #999; border-radius:3px;" class="'+CLASS_NAME+'" title="Code highlighting done by Codeliter Chrome extension. For more information, visit http://davidhu.me/codeliter/">'+selection+'</span>');
 	}
 
 	// recurse through DOM children
@@ -100,8 +100,8 @@ function bracketInit(blockIndex, element) {
 		if(parent.className.indexOf(CLASS_NAME) >= 0 || parent.innerHTML.indexOf(CLASS_NAME) >= 0 )
 			return;
 
-		parent.innerHTML = parent.innerHTML.replace('{', '<span class="'+CLASS_NAME+'-bracket">{</span>');
-		parent.innerHTML = parent.innerHTML.replace('}', '<span class="'+CLASS_NAME+'-bracket">}</span>');
+		parent.innerHTML = parent.innerHTML.replace('{', '<span class="'+CLASS_NAME+'-bracket" title="Code highlighting done by Codeliter Chrome extension. For more information, visit http://davidhu.me/codeliter/">{</span>');
+		parent.innerHTML = parent.innerHTML.replace('}', '<span class="'+CLASS_NAME+'-bracket" title="Code highlighting done by Codeliter Chrome extension. For more information, visit http://davidhu.me/codeliter/">}</span>');
 
 		var brackets = document.getElementsByClassName(CLASS_NAME+'-bracket');
 		for(var i = 0; i < brackets.length; i++) {
