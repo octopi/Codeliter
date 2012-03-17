@@ -6,7 +6,7 @@
 */
 
 // generate (universally) unique class name for each script load
-var CLASS_NAME = 'me-davidhu-selection'+(Math.floor(Math.random()*1000));
+var CLASS_NAME = 'me-davidhu-codeliter'+(Math.floor(Math.random()*1000));
 
 // for bracket matching, keep track of one stack per code block on page
 var bracketStack = [];
