@@ -34,13 +34,7 @@ function init() {
 
 		block.onclick = function(theBlock) {
 			return function() {
-				// clear any previous selections
-				var oldSelections = document.getElementsByClassName(CLASS_NAME);
-				while(oldSelections.length > 0) {
-					var currSelection = oldSelections[0];
-					currSelection.style.border = null;
-					currSelection.className = currSelection.className.replace(CLASS_NAME, '');
-				}
+				clearHighlights();
 
 				// get the selection and highlight
 				var selection = window.getSelection().toString();
@@ -59,6 +53,16 @@ function init() {
 
 		brackets[0].onclick = bracketClick(brackets[0], brackets[1]);
 		brackets[1].onclick = bracketClick(brackets[0], brackets[1]);
+	}
+}
+
+// clear any previous selections
+function clearHighlights() {
+	var oldSelections = document.getElementsByClassName(CLASS_NAME);
+	while(oldSelections.length > 0) {
+		var currSelection = oldSelections[0];
+		currSelection.style.border = null;
+		currSelection.className = currSelection.className.replace(CLASS_NAME, '');
 	}
 }
 
@@ -126,6 +130,8 @@ function bracketInit(blockIndex, element) {
 // highlight open & close bracket pair 
 function bracketClick(openBracket, closeBracket) {
 	return function(event) {
+		clearHighlights();
+		
 		openBracket.setAttribute('style', 'border:1px solid #999; border-radius:3px;');
 		openBracket.className += (' '+CLASS_NAME);
 		closeBracket.setAttribute('style', 'border:1px solid #999; border-radius:3px;');
