@@ -1,3 +1,9 @@
+/*
+	selector.js
+	Code Selector
+
+	Author: @octopi
+*/
 
 // generate (universally) unique class name for each script load
 var CLASS_NAME = 'me-davidhu-selection'+(Math.floor(Math.random()*1000));
@@ -116,13 +122,10 @@ function bracketInit(blockIndex, element) {
 // highlight open & close bracket pair 
 function bracketClick(openBracket, closeBracket) {
 	return function(event) {
-		var selection = window.getSelection().toString();
-		if(selection.length > 0 && selection.search(/^\s+$/) === -1) {
-			openBracket.setAttribute('style', 'border:1px solid #999; border-radius:3px;');
-			openBracket.className += (' '+CLASS_NAME);
-			closeBracket.setAttribute('style', 'border:1px solid #999; border-radius:3px;');
-			closeBracket.className += ' '+CLASS_NAME;
-		}
+		openBracket.setAttribute('style', 'border:1px solid #999; border-radius:3px;');
+		openBracket.className += (' '+CLASS_NAME);
+		closeBracket.setAttribute('style', 'border:1px solid #999; border-radius:3px;');
+		closeBracket.className += ' '+CLASS_NAME;
 		event.stopPropagation();
 	};
 }
