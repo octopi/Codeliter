@@ -1,5 +1,5 @@
 {
-	"name": "Code Selector",
+	"name": "Codeliter",
 	"version": "1.0",
 	"description": "Does IDE-like code selection on StackOverflow and GitHub. Highlights variables and does bracket matching.",
 	"content_scripts": [ {

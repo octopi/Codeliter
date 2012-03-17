@@ -1,6 +1,6 @@
 /*
 	selector.js
-	Code Selector
+	Codeliter
 
 	Author: @octopi
 */
@@ -38,7 +38,7 @@ function init() {
 
 				// get the selection and highlight
 				var selection = window.getSelection().toString();
-				if(selection.length > 0 && selection.search(/^\s+$/) === -1) {
+				if(selection.length > 0 && selection.search(/^\s+$/) === -1 && selection.search(/^\;$/) === -1) {
 					if(!(selection.search(/^\{$/) >= 0 || selection.search(/^\}$/) >= 0)) {
 						highlight(selection, theBlock);	
 					}
@@ -131,7 +131,7 @@ function bracketInit(blockIndex, element) {
 function bracketClick(openBracket, closeBracket) {
 	return function(event) {
 		clearHighlights();
-		
+
 		openBracket.setAttribute('style', 'border:1px solid #999; border-radius:3px;');
 		openBracket.className += (' '+CLASS_NAME);
 		closeBracket.setAttribute('style', 'border:1px solid #999; border-radius:3px;');
