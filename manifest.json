@@ -1,11 +1,10 @@
 {
 	"name": "Codeliter",
-	"version": "1.0",
-	"description": "Does IDE-like code selection on StackOverflow and GitHub. Highlights variables and does bracket matching.",
+	"version": "0.10",
+	"description": "Enables IDE-like code selection on StackOverflow and GitHub. Highlights variables and does bracket matching.",
 	"content_scripts": [ {
 		"matches": ["*://*.stackoverflow.com/*", "*://*.github.com/*"],
 		"js": ["selector.js"]
 	} ],
-	"update_url": "http://davidhu.me/codeliter/updates.xml",
 	"icons": {"128": "icon.png","48": "icon.png","16": "icon.png"}
 }
