@@ -17,45 +17,49 @@ var bid = 0;
 var codeBlocks;
 if(window.location.hostname.indexOf('github.com') > -1) {
 	codeBlocks = document.getElementsByClassName('highlight');	
+	init();
 } else if(window.location.hostname.indexOf('stackoverflow.com') > -1) {
 	codeBlocks = document.getElementsByClassName('prettyprint');	
+	window.setTimeout(init, 1000); // SO has a delay in setting up their code
 }
 
-// initialize all code blocks independently
-for(var i = 0; i < codeBlocks.length; i++) {
-	var block = codeBlocks[i];
+function init() {
+	// initialize all code blocks independently
+	for(var i = 0; i < codeBlocks.length; i++) {
+		var block = codeBlocks[i];
 
-	// begin set up brackets
-	bracketStack[i] = []; 
-	bracketInit(i, block);
+		// begin set up brackets
+		bracketStack[i] = []; 
+		bracketInit(i, block);
 
-	block.onclick = function(theBlock) {
-		return function() {
-			// clear any previous selections
-			var oldSelections = document.getElementsByClassName(CLASS_NAME);
-			while(oldSelections.length > 0) {
-				var currSelection = oldSelections[0];
-				currSelection.style.border = null;
-				currSelection.className = currSelection.className.replace(CLASS_NAME, '');
-			}
-
-			// get the selection and highlight
-			var selection = window.getSelection().toString();
-			if(selection.length > 0 && selection.search(/^\s+$/) === -1) {
-				if(!(selection.search(/^\{$/) >= 0 || selection.search(/^\}$/) >= 0)) {
-					highlight(selection, theBlock);	
+		block.onclick = function(theBlock) {
+			return function() {
+				// clear any previous selections
+				var oldSelections = document.getElementsByClassName(CLASS_NAME);
+				while(oldSelections.length > 0) {
+					var currSelection = oldSelections[0];
+					currSelection.style.border = null;
+					currSelection.className = currSelection.className.replace(CLASS_NAME, '');
 				}
-			}
-		};
-	}(block);
-}
 
-// finish setting up brackets: bind all pairs together
-for(var k = 0; k < bid; k++) {
-	var brackets = document.getElementsByClassName(CLASS_NAME+'-bracket-'+k);
-	
-	brackets[0].onclick = bracketClick(brackets[0], brackets[1]);
-	brackets[1].onclick = bracketClick(brackets[0], brackets[1]);
+				// get the selection and highlight
+				var selection = window.getSelection().toString();
+				if(selection.length > 0 && selection.search(/^\s+$/) === -1) {
+					if(!(selection.search(/^\{$/) >= 0 || selection.search(/^\}$/) >= 0)) {
+						highlight(selection, theBlock);	
+					}
+				}
+			};
+		}(block);
+	}
+
+	// finish setting up brackets: bind all pairs together
+	for(var k = 0; k < bid; k++) {
+		var brackets = document.getElementsByClassName(CLASS_NAME+'-bracket-'+k);
+
+		brackets[0].onclick = bracketClick(brackets[0], brackets[1]);
+		brackets[1].onclick = bracketClick(brackets[0], brackets[1]);
+	}
 }
 
 // finds all instances of selection in element and highlights them
