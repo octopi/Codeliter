@@ -1,0 +1,9 @@
+{
+	"name": "Code Selector",
+	"version": "1.0",
+	"description": "Does IDE-like code selection on StackOverflow and GitHub",
+	"content_scripts": [ {
+		"matches": ["*://*.stackoverflow.com/*", "*://*.github.com/*"],
+		"js": ["selector.js"]
+	} ]
+}
