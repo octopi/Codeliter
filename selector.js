@@ -18,12 +18,28 @@ var codeBlocks;
 if(window.location.hostname.indexOf('github.com') > -1) {
 	codeBlocks = document.getElementsByClassName('highlight');	
 	init();
+
+	// navigating on GitHub is weird: need to refresh everytime js-slide-to class is clicked
+	var ghLinks = document.getElementsByClassName('js-slide-to');
+	for(var i = 0; i < ghLinks.length; i++) {
+		var link = ghLinks[i];
+		link.onclick = function() {
+			return function() {
+				window.setTimeout(function() {
+					codeBlocks = document.getElementsByClassName('highlight');	
+					init();
+				}, 600); // delay due to gh animation
+			};
+		}();
+	}
+
 } else if(window.location.hostname.indexOf('stackoverflow.com') > -1) {
 	codeBlocks = document.getElementsByClassName('prettyprint');	
 	window.setTimeout(init, 1000); // SO has a delay in setting up their code
 }
 
 function init() {
+
 	// initialize all code blocks independently
 	for(var i = 0; i < codeBlocks.length; i++) {
 		var block = codeBlocks[i];
@@ -76,7 +92,6 @@ function highlight(selection, element) {
 		if(parent.className.indexOf(CLASS_NAME) >= 0 || parent.innerHTML.indexOf(CLASS_NAME) >= 0 )
 			return;
 
-		console.log("replacing: "+parent.innerHTML);
 		parent.innerHTML = parent.innerHTML.replace(selection, 
 			'<span style="border:1px solid #999; border-radius:3px;" class="'+CLASS_NAME+'" title="Code highlighting done by Codeliter Chrome extension. For more information, visit http://davidhu.me/codeliter/">'+selection+'</span>');
 	}
