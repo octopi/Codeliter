@@ -1,6 +1,6 @@
 {
 	"name": "Codeliter",
-	"version": "0.11",
+	"version": "0.12",
 	"description": "Enables IDE-like code selection on StackOverflow and GitHub. Highlights variables and does bracket matching.",
 	"content_scripts": [ {
 		"matches": ["*://*.stackoverflow.com/*", "*://*.github.com/*"],

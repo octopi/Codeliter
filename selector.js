@@ -54,8 +54,10 @@ function init() {
 
 				// get the selection and highlight
 				var selection = window.getSelection().toString();
-				if(selection.length > 0 && selection.search(/^\s+$/) === -1 && selection.search(/^\;$/) === -1) {
-					if(!(selection.search(/^\{$/) >= 0 || selection.search(/^\}$/) >= 0)) {
+				if(selection.length > 0 && selection.search(/^\s+$/) === -1) { // not just whitespace
+					if(!(selection.search(/^\{$/) >= 0 || selection.search(/^\}$/) >= 0) // not just closing or opening brackets
+						&& ( (selection.length === 1 && selection.search(/^[a-zA-Z0-9]$/) >= 0 ) // if selection is length 1, needs to be alphanumeric char
+							|| selection.length > 1) ) {
 						highlight(selection, theBlock);	
 					}
 				}
